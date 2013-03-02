@@ -14,6 +14,11 @@ class Scheme
     @wait_scheme = WaitScheme.new(scheme[:wait])
   end
 
+  def calculate(hash)
+    raise "Not a valid  meter scheme" unless valid?
+    {:kms => km_scheme.calculate(hash[:kms]), :wait => wait_scheme.calculate(hash[:wait]) }
+  end
+
   def valid?
     km_scheme.valid? && wait_scheme.valid?
   end
