@@ -1,4 +1,4 @@
-require_relative '../domain/scheme_validator'
+require_relative '../domain/scheme.rb'
 require_relative 'point.rb'
 
 class CabMeter
@@ -19,6 +19,14 @@ class CabMeter
   before :create, :make_urls
 
 
-  validates_with_method :scheme, :valid_scheme?
+  validates_with_method :scheme, :method => :valid_scheme?
+
+  private
+
+  def valid_scheme?
+    return [false, "Scheme is not valid"] unless Scheme.new(scheme).valid?
+    return true
+  end
+
 
 end

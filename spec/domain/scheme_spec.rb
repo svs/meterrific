@@ -1,10 +1,10 @@
 require_relative '../../lib/domain/scheme.rb'
 
 describe Scheme do
+  let(:valid_params) { {:kms => 21, :wait => {:per_minute => 3, :wait_speed => 15}} }
 
   describe "valid scheme" do
     context "flat km rate" do
-      let(:valid_params) { {:kms => 21, :wait => {:per_minute => 3, :wait_speed => 15}} }
       subject { Scheme.new(valid_params) }
       it { should be_valid }
     end
@@ -14,6 +14,10 @@ describe Scheme do
       subject(:scheme) { Scheme.new(valid_params) }
       it { should be_valid }
       it("should calculate correctly") { scheme.calculate(:kms => 30, :wait => 25).should == {:kms => (10*25 + 20*20), :wait => 75} }
+    end
+
+    context "states" do
+      subject(:scheme) { Scheme.new(valid_params) }
     end
 
 
