@@ -3,7 +3,7 @@ require 'rack/contrib'
 require 'rack/cors'
 require 'active_support/all'
 require 'rabl'
-
+require 'awesome_print'
 Rabl.configure do |config|
   config.include_json_root = false
   config.include_child_root = false
