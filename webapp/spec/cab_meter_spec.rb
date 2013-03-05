@@ -44,6 +44,9 @@ describe CabMetersController::Index do
     its(:errors) { should == "invalid API key"  }
   end
 
+  context "start a meter" do
+  end
+
 end
 
 

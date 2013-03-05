@@ -12,6 +12,8 @@ class CabMeter
   property :read_only_id, String, :length => 200
   property :write_id, String, :length => 200
 
+  property :state, String
+
   property :created_at, DateTime
   property :updated_at, DateTime
 
@@ -21,6 +23,36 @@ class CabMeter
 
 
   validates_with_method :scheme, :method => :valid_scheme?
+
+  def started?
+    state == "started"
+  end
+
+  def startable?
+    !started? && !stopped?
+  end
+
+  def stoppable?
+    started?
+  end
+
+  def start!
+    self.state = "started" and save!
+  end
+
+  def stop!
+    self.state = "stopped" and save!
+  end
+
+  def stopped?
+    self.state == "stopped"
+  end
+
+
+  def add_point(point)
+    raise "Meter not started" unless started?
+    self.points << point and self.save and self.reload    
+  end
 
   private
 
