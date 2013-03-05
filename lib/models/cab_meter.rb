@@ -1,3 +1,4 @@
+require 'securerandom'
 require_relative '../domain/scheme.rb'
 require_relative 'point.rb'
 
@@ -26,6 +27,11 @@ class CabMeter
   def valid_scheme?
     return [false, "Scheme is not valid"] unless Scheme.new(scheme).valid?
     return true
+  end
+
+  def make_urls
+    self.write_id = SecureRandom.urlsafe_base64(25)
+    self.read_only_id = SecureRandom.urlsafe_base64(25)
   end
 
 
