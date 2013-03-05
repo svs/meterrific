@@ -2,6 +2,8 @@ module CabMetersController
 
   class Index < ControllerAction
 
+    default_format :json
+
     def get
       @cab_meters = CabMeter.all(:api_key => ApiKey.first(:key => params[:key]))
     end
