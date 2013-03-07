@@ -39,6 +39,11 @@ describe CabMeter do
           it { should be_stopped }
           it { should_not be_started }
           it { should_not be_startable }
+          it "should report start errors" do
+            meter.start!
+            meter.errors.should have_key :start
+            meter.should_not be_started
+          end
         end
           
       end

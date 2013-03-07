@@ -18,6 +18,7 @@ class CabMeter
   property :updated_at, DateTime
 
   has n, :points
+  belongs_to :api_key
 
   before :create, :make_urls
 
@@ -37,7 +38,8 @@ class CabMeter
   end
 
   def start!
-    self.state = "started" and save!
+    startable? ? (self.state = "started" and save!) : self.errors.add(:start, "Cannot start this trip")  
+
   end
 
   def stop!

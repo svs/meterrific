@@ -1,43 +1,47 @@
+require_relative '../../spec/spec_helper.rb'
 require_relative '../app.rb'
 require 'ostruct'
+
+def request(params, env = {})
+  OpenStruct.new(:env => env, :params => params)
+end
 
 
 describe CabMetersController::Index do
 
-  let!(:api_key) { ApiKey.create(:email => "bar#{rand(100000)}@gmail.com").api_key }
+  let!(:api_key) { ApiKey.create(:email => "bar#{rand(100000)}@gmail.com") }
+  let!(:scheme) { {
+      :kms => 21, 
+      :wait => {:per_minute => 3, :wait_speed => 2}, 
+    }
+  }
 
   context "valid api_key" do
     let(:params) { {
         :cab_meter => {
-          :scheme => {
-            :kms => 21, 
-            :wait => {:per_minute => 3, :wait_speed => 2}, 
-          }
+          :scheme => scheme,
         },
-        :api_key => api_key
+        :api_key => api_key.api_key
       }}
 
-    let(:request) { OpenStruct.new(:env => {}, :params => params) }
-    let(:create) { CabMetersController::Index.new(request).post }
+    let(:r) { request(params) }
+    let(:create) { CabMetersController::Index.new(r).post }
 
-    subject { create[2] }
+    subject { JSON.load(create[2]) }
 
-    it { ap JSON.load(subject) }
+    it { should have_key "id" }
   end
 
   context "invalid api_key" do
     let(:params) { {
         :cab_meter => {
-          :scheme => {
-            :kms => 21, 
-            :wait => {:per_minute => 3, :wait_speed => 2}, 
-          }
+          :scheme => scheme
         },
         :api_key => "no such key"
       }}
 
-    let(:request) { OpenStruct.new(:env => {}, :params => params) }
-    let(:create) { CabMetersController::Index.new(request).post }
+    let(:r) { request(params) }
+    let(:create) { CabMetersController::Index.new(r).post }
     
     subject { OpenStruct.new(JSON.load(create[2])) }
 
@@ -45,8 +49,24 @@ describe CabMetersController::Index do
   end
 
   context "start a meter" do
+    let!(:cab_meter) { CabMeter.create(:scheme => scheme, :api_key => api_key) }
+    let(:params) { {:api_key => api_key.api_key, :id => cab_meter.write_id } }
+    before { CabMetersController::Start.new(request(params)).post }
+    it "should start the meter" do
+      cab_meter.reload.should be_started
+    end
   end
 
+  context "stop a meter" do
+    let!(:cab_meter) { CabMeter.create(:scheme => scheme, :state => "started", :api_key => api_key) }
+    let(:params) { {:api_key => api_key.api_key, :id => cab_meter.write_id } }
+    before { CabMetersController::Stop.new(request(params)).post }
+    it "should start the meter" do
+      cab_meter.reload.should be_stopped
+    end
+  end
+
+  
 end
 
 
