@@ -34,6 +34,17 @@ module CabMetersController
     end
   end
 
+  class Mark < ControllerAction
+
+    def post
+      @cab_meter = CabMeter.first(:write_id => params[:id])
+      return fail_with(JSON.dump({:errors => "invalid API key"}, 401)) unless @cab_meter
+      @point = Point.new(params[:point].merge(:cab_meter => @cab_meter))
+      @point.save ? succeed_with(JSON.dump(@point.attributes)) : fail_with(@point.errors.to_hash, 422)
+    end
+
+  end
+
 
 end
 

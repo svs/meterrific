@@ -10,6 +10,7 @@ class Scheme
   
 
   def initialize(scheme)
+    scheme = ActiveSupport::HashWithIndifferentAccess.new(scheme)
     @km_scheme = KmScheme.new(scheme[:kms])
     @wait_scheme = WaitScheme.new(scheme[:wait])
   end

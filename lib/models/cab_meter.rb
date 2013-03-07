@@ -8,7 +8,7 @@ class CabMeter
 
   property :id, Serial
 
-  property :scheme, Json
+  property :scheme, Json, :lazy => false
   property :read_only_id, String, :length => 200
   property :write_id, String, :length => 200
 

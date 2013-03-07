@@ -66,6 +66,15 @@ describe CabMetersController::Index do
     end
   end
 
+  context "add a point" do
+    let!(:cab_meter) { CabMeter.create(:scheme => scheme, :state => "started", :api_key => api_key) }
+    let(:params) { {:api_key => api_key.api_key, :id => cab_meter.write_id, :point => {:lat => 19.12, :lng => 20.12} } }
+    before { CabMetersController::Mark.new(request(params)).post }
+    it "should mark a point" do
+      cab_meter.reload.points.count.should == 1
+    end
+  end
+
   
 end
 
