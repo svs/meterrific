@@ -28,7 +28,9 @@ class KmScheme
   end
 
   def steps
-    scheme.class == Hash ? scheme.to_a : [["then", Integer(scheme)]]
+    return scheme if scheme.class == Array
+    return scheme.to_a if scheme.class == Hash
+    return [["then", Integer(scheme)]]
   end
 
   def kms_by_step(kms)
