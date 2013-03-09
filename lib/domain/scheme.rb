@@ -29,9 +29,9 @@ class Scheme
     @_kms[kms] ||= km_scheme.calculate(kms) 
   end
 
-  def wait_cost(minutes)
+  def wait_cost(hrs)
     @_wait_cost ||= {}
-    @_wait_cost[minutes] ||= wait_scheme.calculate(minutes)
+    @_wait_cost[hrs] ||= wait_scheme.calculate(hrs)
   end
 
   def wait_speed
