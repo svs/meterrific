@@ -30,7 +30,11 @@ class Point
   end
 
   def attributes
-    super.merge(:speed => speed, :distance => distance, :created_at => self.created_at.strftime('%Y-%m-%d %I:%M%Z %p'))
+    super.merge(:speed => speed, :distance => distance)
+  end
+
+  def to_json
+    JSON.dump(attributes.except(:created_at))
   end
 
   private
