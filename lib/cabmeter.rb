@@ -1,6 +1,7 @@
 require 'data_mapper'
 require_relative './models/cab_meter.rb'
 require_relative './models/api_key.rb'
+require_relative './domain/meter_reading.rb'
 def database_url(env)
   ENV['DATABASE_URL'] ||
       {

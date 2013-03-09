@@ -13,6 +13,10 @@ class WaitScheme
     minutes * scheme[:per_minute]
   end
 
+  def wait_speed
+    scheme[:wait_speed]
+  end
+
   private
 
   attr_reader :scheme

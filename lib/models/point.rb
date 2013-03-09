@@ -9,10 +9,6 @@ class Point
   property :lat, Decimal, :precision => 18, :scale => 15, :required => true, :max => 90, :min => -90
   property :lng, Decimal, :precision => 18, :scale => 15, :required => true, :max => 180, :min => -180
   
-  property :speed, Float
-  property :distance, Float
-
-  before :save, :calculate_diff_from_previous_point
 
   belongs_to :cab_meter, :required => false
 
@@ -24,12 +20,20 @@ class Point
                    :speed => ((distance/time).round(4) rescue 0))
   end
 
-  private
-
-  def calculate_diff_from_previous_point
-    self.distance = diff_from_previous_point.distance
-    self.speed = diff_from_previous_point.speed
+  def speed
+    diff_from_previous_point.speed
   end
+
+
+  def distance
+    diff_from_previous_point.distance
+  end
+
+  def attributes
+    super.merge(:speed => speed, :distance => distance)
+  end
+
+  private
 
   def diff_from_previous_point
     @_d ||= (self - previous_point)

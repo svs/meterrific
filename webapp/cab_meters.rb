@@ -46,6 +46,17 @@ module CabMetersController
   end
 
 
+  class Read < ControllerAction
+
+    def get
+      @cab_meter = CabMeter.first(:read_only_id => params[:id])
+      return fail_with(JSON.dump({:errors => "invalid read id"}, 401)) unless @cab_meter
+      succeed_with JSON.dump(MeterReading.new(@cab_meter).calculate())
+    end
+
+  end
+
+
 end
 
   

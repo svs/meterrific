@@ -17,7 +17,25 @@ class Scheme
 
   def calculate(hash)
     raise "Not a valid  meter scheme" unless valid?
-    {:kms => km_scheme.calculate(hash[:kms]), :wait => wait_scheme.calculate(hash[:wait]) }
+    {
+      :kms => {:count => hash[:kms], :cost => km_cost(hash[:kms]).round(2)}, 
+      :wait => {:count => hash[:wait], :cost => wait_cost(hash[:wait]).round(2)},
+      :total => km_cost(hash[:kms]).round(2) + wait_cost(hash[:wait]).round(2)
+    }
+  end
+
+  def km_cost(kms)
+    @_kms ||= {}
+    @_kms[kms] ||= km_scheme.calculate(kms) 
+  end
+
+  def wait_cost(minutes)
+    @_wait_cost ||= {}
+    @_wait_cost[minutes] ||= wait_scheme.calculate(minutes)
+  end
+
+  def wait_speed
+    wait_scheme.wait_speed
   end
 
   def valid?
