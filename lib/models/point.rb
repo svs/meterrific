@@ -30,7 +30,7 @@ class Point
   end
 
   def attributes
-    super.merge(:speed => speed, :distance => distance)
+    super.merge(:speed => speed, :distance => distance, :created_at => self.created_at.strftime('%Y-%m-%d %I:%M%Z %p'))
   end
 
   private
