@@ -12,7 +12,10 @@ module CabMetersController
       @api_key = ApiKey.first(:api_key => params[:api_key])
       return fail_with(JSON.dump({:errors => "invalid API key"}), 401) unless @api_key
       @cab_meter = CabMeter.new(params[:cab_meter].merge(:api_key => @api_key))
-      @cab_meter.save ? succeed_with(JSON.dump(@cab_meter.attributes)) : fail_with(JSON.dump(@cab_meter.errors.to_hash))
+      ap @cab_meter.attributes
+      ap @cab_meter.save
+      ap @cab_meter.errors.to_hash
+      @cab_meter.saved? ? succeed_with(JSON.dump(@cab_meter.attributes)) : fail_with(JSON.dump(@cab_meter.errors.to_hash))
     end
   end
 
