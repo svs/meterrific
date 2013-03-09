@@ -56,6 +56,10 @@ class CabMeter
     self.points << point and self.save and self.reload    
   end
 
+  def attributes
+    super.except(:created_at, :updated_at)
+  end
+
   private
 
   def valid_scheme?
